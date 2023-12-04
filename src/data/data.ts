@@ -1,13 +1,15 @@
 export type CounterProps = {
     value: number;
     maximumValue: number;
-    initialValue: number
+    minimumValue: number;
+    errorMessage: string|null
 }
 
 const counterData: CounterProps = {
-    initialValue: 12,
     value: 0,
-    maximumValue: 42
+    minimumValue: 0,
+    maximumValue: 10,
+    errorMessage: null
 }
 
 export default counterData
