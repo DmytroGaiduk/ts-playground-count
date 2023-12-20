@@ -1,25 +1,26 @@
-import React from 'react';
+import React, {ChangeEvent, DetailedHTMLProps, InputHTMLAttributes, ReactNode} from 'react';
 import s from 'styled-components';
 
-type NumericInputProps = {
-    id: string
-    value: number
-    onChange: any;
-    placeholder?: string
-    min?: number;
-    max?: number;
+
+type DefaultInputProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+
+type NumericInputProps = Omit<DefaultInputProps, 'type'> & {
+    onChangeValue?: (value: string) => void
 }
 
-function NumericInput({id, min, max, placeholder, onChange, value}: NumericInputProps) {
+function NumericInput({onChangeValue, onChange, ...restProps}: NumericInputProps) {
+
+   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+       onChangeValue?.(e.target.value)
+       onChange?.(e)
+   }
+
     return (
-        <>
-            <StyledInput type={'number'} id={id}
-                         min={min}
-                         max={max}
-                         placeholder={placeholder}
-                         onChange={onChange}
-                         value={value}/>
-        </>
+            <StyledInput type={'number'}
+                         onChange={handleChange}
+                         {...restProps}
+            />
+
     );
 }
 

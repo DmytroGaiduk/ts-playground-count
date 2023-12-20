@@ -6,7 +6,35 @@ import {Plus, Minus, RefreshCw} from 'react-feather'
 
 
 function CounterDisplay() {
-    const {store, incrementHandler, decrementHandler, resetHandler} = React.useContext<any>(CounterContext);
+    const {
+        store,
+        incrementHandler,
+        decrementHandler,
+        resetHandler,
+        errorHandler,
+        applyChangesHandler
+    } = React.useContext<any>(CounterContext);
+
+
+    const onResetClick = () => {
+        applyChangesHandler(false)
+    }
+
+    const onIncrementClick = () => {
+        if (store.value >= store.maximumValue) {
+            errorHandler(`Can not increment above ${store.maximumValue}`)
+            return
+        }
+        incrementHandler();
+    }
+
+    const onDecrementClick = () => {
+        if (store.value <= store.minimumValue) {
+            errorHandler(`Can not decrement below ${store.minimumValue}`)
+            return
+        }
+        decrementHandler();
+    }
 
     return (
         <div>
@@ -16,11 +44,14 @@ function CounterDisplay() {
 
             <BtnWrapper>
                 <ControlButtonsWrapper>
-                    <Button disabled={store.errorMessage} onClick={decrementHandler}><Minus
-                        size={16}/>Decrement</Button>
-                    <Button disabled={store.errorMessage} onClick={incrementHandler}><Plus size={16}/>Increment</Button>
+                    <Button disabled={store.errorMessage} onClick={onDecrementClick}>
+                        <Minus size={16}/> Decrement</Button>
+
+                    <Button disabled={store.errorMessage} onClick={onIncrementClick}>
+                        <Plus size={16}/> Increment</Button>
                 </ControlButtonsWrapper>
-                <Button onClick={resetHandler}><RefreshCw size={16}/>Reset</Button>
+
+                <Button onClick={resetHandler}> <RefreshCw size={16}/> Reset</Button>
             </BtnWrapper>
 
             <ErrorMessagePlaceholder>

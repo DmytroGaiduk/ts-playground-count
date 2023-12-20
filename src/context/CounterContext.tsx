@@ -16,22 +16,16 @@ const counterReducer = (state: any, action: any): any => {
 
     switch (type) {
         case 'increment': {
-            //проверка здесь или в диспатчере?
-            if (state.value < state.maximumValue) {
-                return {...state, value: state.value + 1, errorMessage: null};
-            } else {
-                return {...state, errorMessage: `Maximum value! Cannot increment bigger than ${state.maximumValue}.`};
-            }
+            return {...state, value: state.value + 1};
         }
         case 'decrement': {
-            if (state.value > state.minimumValue) {
-                return {...state, value: state.value - 1, errorMessage: null};
-            } else {
-                return {...state, errorMessage: `Minimum value! Cannot decrement below ${state.minimumValue}.`};
-            }
+            return {...state, value: state.value - 1};
         }
         case 'reset': {
-            return {...state, value: 0, errorMessage: null};
+            return {minimumValue:0,maximumValue:10, value: 0, isApplied: false,errorMessage: null};
+        }
+        case 'apply-changes': {
+            return {...state, isApplied: action.payload};
         }
         case 'update-maximum': {
             return {...state, maximumValue: action.payload};
@@ -52,35 +46,10 @@ const counterReducer = (state: any, action: any): any => {
 
 function CounterContextProvider({children}: any) {
 
+    const savedData = localStorage.getItem("CounterSettings")
+    const initState = savedData ? JSON.parse(savedData) : counterData
 
-
-    //Почему не работает?
-
-    // const [store, dispatch] = React.useReducer(counterReducer, () => {
-    //
-    //     //get from LS
-    //     const savedData = localStorage.getItem("CounterSettings");
-    //     console.log(savedData);
-    //
-    //     if (savedData)
-    //         //console.log(JSON.parse(savedData))
-    //         return JSON.parse(savedData)
-    //     } else {
-    //         return counterData;
-    //     }
-    // }
-
-    /*
-    React.useEffect(() => {
-    //это ок?
-    //нужен ли дебаунсер?
-        localStorage.setItem("CounterSettings", JSON.stringify(store))
-    }, [store.value])
-    */
-
-
-
-     const [store, dispatch] = React.useReducer(counterReducer,counterData);
+    const [store, dispatch] = React.useReducer(counterReducer, initState)
 
     ///counter actions
     const incrementHandler = () => {
@@ -99,6 +68,7 @@ function CounterContextProvider({children}: any) {
         dispatch({
             type: 'reset',
         });
+        localStorage.clear()
     };
 
     //settings actions
@@ -123,6 +93,13 @@ function CounterContextProvider({children}: any) {
         });
     }
 
+    const applyChangesHandler = (nextState: boolean) => {
+        dispatch({
+            type: "apply-changes",
+            payload:nextState
+        })
+    }
+
     //error
     const errorHandler = (error: string | null) => {
         dispatch({
@@ -139,6 +116,7 @@ function CounterContextProvider({children}: any) {
         updateMinimumValueHandler,
         updateStartValueHandler,
         errorHandler,
+        applyChangesHandler,
         resetHandler
     };
 

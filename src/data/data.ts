@@ -2,14 +2,16 @@ export type CounterProps = {
     value: number;
     maximumValue: number;
     minimumValue: number;
-    errorMessage: string|null
+    isApplied: boolean;
+    errorMessage: string | null
 }
 
 const counterData: CounterProps = {
     value: 0,
     minimumValue: 0,
     maximumValue: 10,
-    errorMessage: null
+    errorMessage: null,
+    isApplied:false
 }
 
 export default counterData

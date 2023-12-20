@@ -21,3 +21,16 @@ body {
     align-items: center;
     background-color: #ececec;
 }
+
+.App {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    place-content: center;
+}
+
+@media only screen and (max-width: 720px) {
+    .App {
+        flex-direction: column;
+    }
+}

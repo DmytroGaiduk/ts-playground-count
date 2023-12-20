@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ChangeEvent} from 'react'
 import Button from "../ui/Button";
 import s from 'styled-components'
 
@@ -11,44 +11,75 @@ function CounterControl() {
         updateMaximumValueHandler,
         updateMinimumValueHandler,
         updateStartValueHandler,
-        errorHandler
+        errorHandler,
+        applyChangesHandler
     } = React.useContext<any>(CounterContext);
 
-    const [startValue, setStartValue] = React.useState(0)
-
-    //local to sync with store?
+    const [startValue, setStartValue] = React.useState(store.value)
     const [maxValue, setMaxValue] = React.useState(store.maximumValue)
     const [minValue, setMinValue] = React.useState(store.minimumValue)
 
     //применяется на сабми формы
-    const [applied, setApplied] = React.useState(false)
+   // const [applied, setApplied] = React.useState(false)
 
     const valId = React.useId()
     const maxValId = React.useId()
     const minValId = React.useId()
 
     React.useEffect(() => {
-        //это ок?
-
-        if ((minValue >= maxValue) || (maxValue <= minValue)) {
-            errorHandler('Incorrect value')
-        } else if ((startValue > maxValue) || (startValue < minValue)) {
-            errorHandler('Provided start value is out of bounds')
-        } else {
-            errorHandler(null)
+        if (store.isApplied) {
+            localStorage.setItem("CounterSettings", JSON.stringify(store))
         }
-    }, [minValue, maxValue, startValue])
+    }, [store.isApplied])
 
     const submitCounterSettingsForm = (e: React.ChangeEvent<any>) => {
         e.preventDefault();
 
+        if (startValue < minValue) {
+            errorHandler('Provided start value lesser than minValue')
+            return
+        }
 
-        //как сократить?
-        updateMaximumValueHandler(maxValue);
-        updateMinimumValueHandler(minValue);
-        updateStartValueHandler(startValue);
-        //
-        setApplied(true)
+        if (startValue > maxValue) {
+            errorHandler('Provided start value bigger than maxValue');
+            return
+        }
+
+        if (minValue < maxValue) {
+            updateMaximumValueHandler(maxValue);
+            updateMinimumValueHandler(minValue);
+            updateStartValueHandler(startValue);
+            applyChangesHandler(true);
+        } else {
+            errorHandler('Provided minimum value bigger than maximum value')
+            return
+        }
+    }
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        let val = parseInt(e.target.value, 10);
+
+        if (isNaN(val)) {
+            val = 0
+        }
+
+        switch (e.target.name) {
+            case 'startValue':
+                setStartValue(val);
+                break
+            case 'minValue':
+                setMinValue(val);
+                break
+            case 'maxValue':
+                setMaxValue(val);
+                break
+            default:
+                throw new Error("Unknown input type")
+        }
+
+        errorHandler(null)
+
+        applyChangesHandler(false)
     }
 
     return (
@@ -56,40 +87,40 @@ function CounterControl() {
             <h1>Settings</h1>
             <InputWrapper>
                 <label htmlFor={valId}>Start value</label>
-                <NumericInput id={valId} placeholder={'Enter new value'}
+                <NumericInput id={valId}
+                              placeholder='Enter new value'
                               min={minValue}
                               max={maxValue}
                               value={startValue}
-                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                  setStartValue(parseInt(e.target.value, 10))
-                                  setApplied(false)
-                              }}/>
+                              name='startValue'
+                              onChange={handleChange}/>
             </InputWrapper>
 
             <InputWrapper>
                 <label htmlFor={minValId}>Minimum value</label>
-                <NumericInput id={minValId} placeholder={'Enter min value'}
+                <NumericInput id={minValId}
+                              placeholder='Enter min value'
                               value={minValue}
                               max={maxValue}
-                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                  setMinValue(parseInt(e.target.value, 10))
-                                  setApplied(false)
-                              }}/>
+                              name='minValue'
+                              onChange={handleChange}/>
             </InputWrapper>
 
             <InputWrapper>
                 <label htmlFor={maxValId}>Maximum value</label>
-                <NumericInput id={maxValId} placeholder={'Enter max value'}
+                <NumericInput id={maxValId}
+                              placeholder={'Enter max value'}
                               value={maxValue}
                               min={minValue}
-                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                  setMaxValue(parseInt(e.target.value, 10))
-                                  setApplied(false)
-                              }}/>
+                              name='maxValue'
+                              onChange={handleChange}
+                />
             </InputWrapper>
 
+
             <div>
-                <Button disabled={store.errorMessage || applied} onClick={submitCounterSettingsForm}>Apply</Button>
+                {/*{store.isApplied.toString()}*/}
+                <Button disabled={store.isApplied}  onClick={submitCounterSettingsForm}>Apply</Button>
             </div>
         </form>
     );

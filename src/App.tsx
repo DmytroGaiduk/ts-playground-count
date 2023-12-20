@@ -1,8 +1,7 @@
-import React from 'react';
-import './App.css';
 import CounterControl from "./components/CounterControl";
 import CounterDisplay from "./components/CounterDisplay";
 import CounterContextProvider from "./context/CounterContext";
+
 import s from 'styled-components'
 
 function App() {
@@ -10,10 +9,10 @@ function App() {
         <CounterContextProvider>
             <div className="App">
                 <Panel>
-                    <CounterControl></CounterControl>
+                    <CounterControl/>
                 </Panel>
                 <Panel>
-                    <CounterDisplay></CounterDisplay>
+                    <CounterDisplay/>
                 </Panel>
             </div>
         </CounterContextProvider>
