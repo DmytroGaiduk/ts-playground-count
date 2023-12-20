@@ -16,6 +16,7 @@ const counterReducer = (state: any, action: any): any => {
 
     switch (type) {
         case 'increment': {
+            //проверка здесь или в диспатчере?
             if (state.value < state.maximumValue) {
                 return {...state, value: state.value + 1, errorMessage: null};
             } else {
@@ -50,7 +51,36 @@ const counterReducer = (state: any, action: any): any => {
 
 
 function CounterContextProvider({children}: any) {
-    const [store, dispatch] = React.useReducer(counterReducer, counterData);
+
+
+
+    //Почему не работает?
+
+    // const [store, dispatch] = React.useReducer(counterReducer, () => {
+    //
+    //     //get from LS
+    //     const savedData = localStorage.getItem("CounterSettings");
+    //     console.log(savedData);
+    //
+    //     if (savedData)
+    //         //console.log(JSON.parse(savedData))
+    //         return JSON.parse(savedData)
+    //     } else {
+    //         return counterData;
+    //     }
+    // }
+
+    /*
+    React.useEffect(() => {
+    //это ок?
+    //нужен ли дебаунсер?
+        localStorage.setItem("CounterSettings", JSON.stringify(store))
+    }, [store.value])
+    */
+
+
+
+     const [store, dispatch] = React.useReducer(counterReducer,counterData);
 
     ///counter actions
     const incrementHandler = () => {

@@ -2,19 +2,23 @@ import React from 'react';
 import s from 'styled-components';
 
 type NumericInputProps = {
-    id?: any
-    placeholder?: string
+    id: string
     value: number
     onChange: any;
+    placeholder?: string
+    min?: number;
+    max?: number;
 }
 
-function NumericInput(props: NumericInputProps) {
+function NumericInput({id, min, max, placeholder, onChange, value}: NumericInputProps) {
     return (
         <>
-            <StyledInput type={'number'} id={props.id}
-                         placeholder={props.placeholder}
-                         onChange={props.onChange}
-                         value={props.value}/>
+            <StyledInput type={'number'} id={id}
+                         min={min}
+                         max={max}
+                         placeholder={placeholder}
+                         onChange={onChange}
+                         value={value}/>
         </>
     );
 }

@@ -16,7 +16,8 @@ function CounterDisplay() {
 
             <BtnWrapper>
                 <ControlButtonsWrapper>
-                    <Button disabled={store.errorMessage} onClick={decrementHandler}><Minus size={16}/>Decrement</Button>
+                    <Button disabled={store.errorMessage} onClick={decrementHandler}><Minus
+                        size={16}/>Decrement</Button>
                     <Button disabled={store.errorMessage} onClick={incrementHandler}><Plus size={16}/>Increment</Button>
                 </ControlButtonsWrapper>
                 <Button onClick={resetHandler}><RefreshCw size={16}/>Reset</Button>
@@ -63,7 +64,9 @@ const ErrorMessagePlaceholder = s.div`
     min-height:45px;
     margin-top:10px;
 `
+
 const ErrorMessage = s.div`
     color: crimson;
 `
+
 export default CounterDisplay;

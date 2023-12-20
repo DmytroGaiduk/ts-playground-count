@@ -16,30 +16,38 @@ function CounterControl() {
 
     const [startValue, setStartValue] = React.useState(0)
 
+    //local to sync with store?
     const [maxValue, setMaxValue] = React.useState(store.maximumValue)
     const [minValue, setMinValue] = React.useState(store.minimumValue)
+
+    //применяется на сабми формы
     const [applied, setApplied] = React.useState(false)
 
     const valId = React.useId()
     const maxValId = React.useId()
     const minValId = React.useId()
 
-    React.useEffect(()=>{
-        if((minValue >= maxValue) || (maxValue <= minValue)){
+    React.useEffect(() => {
+        //это ок?
+
+        if ((minValue >= maxValue) || (maxValue <= minValue)) {
             errorHandler('Incorrect value')
-        } else if((startValue > maxValue) || (startValue < minValue) ){
+        } else if ((startValue > maxValue) || (startValue < minValue)) {
             errorHandler('Provided start value is out of bounds')
         } else {
             errorHandler(null)
         }
-    },[minValue, maxValue, startValue])
+    }, [minValue, maxValue, startValue])
 
     const submitCounterSettingsForm = (e: React.ChangeEvent<any>) => {
         e.preventDefault();
 
+
+        //как сократить?
         updateMaximumValueHandler(maxValue);
         updateMinimumValueHandler(minValue);
         updateStartValueHandler(startValue);
+        //
         setApplied(true)
     }
 
@@ -48,29 +56,36 @@ function CounterControl() {
             <h1>Settings</h1>
             <InputWrapper>
                 <label htmlFor={valId}>Start value</label>
-                <NumericInput id={valId}  placeholder={'Enter new value'} value={startValue}
-                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                           setStartValue(parseInt(e.target.value, 10))
-                           setApplied(false)
-                       }}/>
+                <NumericInput id={valId} placeholder={'Enter new value'}
+                              min={minValue}
+                              max={maxValue}
+                              value={startValue}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                  setStartValue(parseInt(e.target.value, 10))
+                                  setApplied(false)
+                              }}/>
             </InputWrapper>
 
             <InputWrapper>
                 <label htmlFor={minValId}>Minimum value</label>
-                <NumericInput id={minValId}  placeholder={'Enter min value'} value={minValue}
-                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                           setMinValue(parseInt(e.target.value, 10))
-                           setApplied(false)
-                       }}/>
+                <NumericInput id={minValId} placeholder={'Enter min value'}
+                              value={minValue}
+                              max={maxValue}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                  setMinValue(parseInt(e.target.value, 10))
+                                  setApplied(false)
+                              }}/>
             </InputWrapper>
 
             <InputWrapper>
                 <label htmlFor={maxValId}>Maximum value</label>
-                <NumericInput id={maxValId}  placeholder={'Enter max value'} value={maxValue}
-                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                           setMaxValue(parseInt(e.target.value, 10))
-                           setApplied(false)
-                       }}/>
+                <NumericInput id={maxValId} placeholder={'Enter max value'}
+                              value={maxValue}
+                              min={minValue}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                  setMaxValue(parseInt(e.target.value, 10))
+                                  setApplied(false)
+                              }}/>
             </InputWrapper>
 
             <div>
@@ -89,8 +104,6 @@ const InputWrapper = s.div`
     & label {
         font-weight: 500
     }
-    
-
 `
 
 export default CounterControl;
