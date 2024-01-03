@@ -19,9 +19,6 @@ function CounterControl() {
     const [maxValue, setMaxValue] = React.useState(store.maximumValue)
     const [minValue, setMinValue] = React.useState(store.minimumValue)
 
-    //применяется на сабми формы
-   // const [applied, setApplied] = React.useState(false)
-
     const valId = React.useId()
     const maxValId = React.useId()
     const minValId = React.useId()
@@ -32,7 +29,7 @@ function CounterControl() {
         }
     }, [store.isApplied])
 
-    const submitCounterSettingsForm = (e: React.ChangeEvent<any>) => {
+    const submitCounterSettingsForm = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (startValue < minValue) {
@@ -44,7 +41,6 @@ function CounterControl() {
             errorHandler('Provided start value bigger than maxValue');
             return
         }
-
         if (minValue < maxValue) {
             updateMaximumValueHandler(maxValue);
             updateMinimumValueHandler(minValue);
@@ -56,7 +52,7 @@ function CounterControl() {
         }
     }
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
         let val = parseInt(e.target.value, 10);
 
         if (isNaN(val)) {
