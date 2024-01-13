@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react'
+import React, {ChangeEvent, useContext, useId, useState} from 'react'
 import Button from "../ui/Button";
 import s from 'styled-components'
 
@@ -13,15 +13,15 @@ function CounterControl() {
         updateStartValueHandler,
         errorHandler,
         applyChangesHandler
-    } = React.useContext<any>(CounterContext);
+    } = useContext<any>(CounterContext);
 
-    const [startValue, setStartValue] = React.useState(store.value)
-    const [maxValue, setMaxValue] = React.useState(store.maximumValue)
-    const [minValue, setMinValue] = React.useState(store.minimumValue)
+    const [startValue, setStartValue] = useState(store.value)
+    const [maxValue, setMaxValue] = useState(store.maximumValue)
+    const [minValue, setMinValue] = useState(store.minimumValue)
 
-    const valId = React.useId()
-    const maxValId = React.useId()
-    const minValId = React.useId()
+    const valId = useId()
+    const maxValId = useId()
+    const minValId = useId()
 
     React.useEffect(() => {
         if (store.isApplied) {

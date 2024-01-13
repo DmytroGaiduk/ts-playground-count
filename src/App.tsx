@@ -2,21 +2,27 @@ import CounterControl from "./components/CounterControl";
 import CounterDisplay from "./components/CounterDisplay";
 import CounterContextProvider from "./context/CounterContext";
 
-import s from 'styled-components'
+import s from 'styled-components';
+
+import {Provider} from "react-redux";
+import store from './redux/store'
+
 
 function App() {
     return (
-        <CounterContextProvider>
-            <div className="App">
-                <Panel>
-                    <CounterControl/>
-                </Panel>
-                <Panel>
-                    <CounterDisplay/>
-                </Panel>
-            </div>
-        </CounterContextProvider>
-    );
+        <Provider store={store}>
+            <CounterContextProvider>
+                <div className="App">
+                    <Panel>
+                        <CounterControl/>
+                    </Panel>
+                    <Panel>
+                        <CounterDisplay/>
+                    </Panel>
+                </div>
+            </CounterContextProvider>
+        </Provider>
+    )
 }
 
 const Panel = s.div`

@@ -46,9 +46,8 @@ const counterReducer = (state: any, action: any): any => {
 
 function CounterContextProvider({children}: any) {
 
-    const savedData = localStorage.getItem("CounterSettings")
+    const savedData = null//localStorage.getItem("CounterSettings")
     const initState = savedData ? JSON.parse(savedData) : counterData
-
     const [store, dispatch] = React.useReducer(counterReducer, initState)
 
     ///counter actions
@@ -71,7 +70,6 @@ function CounterContextProvider({children}: any) {
         localStorage.clear()
     };
 
-    //settings actions
     const updateMaximumValueHandler = (maximum: number) => {
         dispatch({
             type: 'update-maximum',
@@ -100,7 +98,6 @@ function CounterContextProvider({children}: any) {
         })
     }
 
-    //error
     const errorHandler = (error: string | null) => {
         dispatch({
             type: "update-error-message",
